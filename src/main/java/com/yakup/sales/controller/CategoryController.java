@@ -26,3 +26,4 @@ public class CategoryController {
         return service.getRepository().findAll(spec, pageable);
     }
 }
+
