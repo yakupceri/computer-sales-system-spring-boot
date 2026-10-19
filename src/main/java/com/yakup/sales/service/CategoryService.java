@@ -9,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -25,5 +27,9 @@ public class CategoryService implements IBaseFilterService<Category, CategoryRep
         return repo.findAll();
     }
 
+    public Category findById(Long id) {
+        return repo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Kategori bulunamadı: " + id));
+    }
 
 }

@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>Spring Boot Ders Notları</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm; }
+  body { font-family: -apple-system, "Helvetica Neue", Arial, sans-serif; font-size: 10.5pt; line-height: 1.5; color: #1f2328; }
+  h1 { font-size: 22pt; margin: 0 0 4pt; }
+  .sub { color: #59636e; margin-bottom: 18pt; }
+  h2 { font-size: 15pt; margin: 22pt 0 8pt; padding-bottom: 4pt; border-bottom: 2px solid #0969da; color: #0969da; page-break-after: avoid; }
+  .q { margin: 12pt 0 14pt; page-break-inside: avoid; }
+  .q h3 { font-size: 11.5pt; margin: 0 0 5pt; background: #f6f8fa; border-left: 4px solid #bf8700; padding: 5pt 8pt; }
+  .q h3::before { content: "Soru: "; color: #bf8700; }
+  p { margin: 4pt 0; }
+  ul { margin: 4pt 0; padding-left: 18pt; }
+  li { margin: 2pt 0; }
+  code { font-family: "SF Mono", Menlo, "Courier New", monospace; font-size: 9.5pt; background: #eff1f3; padding: 0 3pt; border-radius: 3px; }
+  pre { font-family: "SF Mono", Menlo, "Courier New", monospace; font-size: 9pt; background: #f6f8fa; border: 1px solid #d1d9e0; border-radius: 4px; padding: 7pt 9pt; margin: 6pt 0; white-space: pre-wrap; }
+  pre code { background: none; padding: 0; }
+  table { border-collapse: collapse; margin: 6pt 0; width: 100%; font-size: 9.5pt; }
+  th, td { border: 1px solid #d1d9e0; padding: 4pt 6pt; text-align: left; vertical-align: top; }
+  th { background: #f6f8fa; }
+  .tip { background: #ddf4ff; border-left: 4px solid #0969da; padding: 5pt 8pt; margin: 6pt 0; }
+  .warn { background: #fff8c5; border-left: 4px solid #bf8700; padding: 5pt 8pt; margin: 6pt 0; }
+</style>
+</head>
+<body>
+
+<h1>Spring Boot Ders Notları</h1>
+<div class="sub">Computer Sales System projesi üzerinden, sorduğum sorular ve cevapları</div>
+
+<!-- ============================================================ -->
+<h2>Ders 0: Proje ve Spring Boot'a giriş</h2>
+
+<div class="q">
+<h3>Bu proje ne yapıyor? Spring Boot nedir?</h3>
+<p>Proje bir <b>REST API</b>: ekranı yok, istek alıp JSON cevap veren bir sunucu programı (backend). <b>Spring Boot</b>, Java ile sunucu yazmayı kolaylaştıran hazır altyapı (framework). Sunucu, veritabanı bağlantısı, JSON çevirme, SQL gibi işleri o hallediyor; biz sadece "ne yapılacağını" yazıyoruz.</p>
+<table>
+<tr><th>Dosya / klasör</th><th>Görevi</th></tr>
+<tr><td><code>pom.xml</code></td><td>Kullanılan kütüphanelerin listesi (Maven indirir)</td></tr>
+<tr><td><code>ComputerSalesSystemApplication.java</code></td><td>Başlangıç noktası (<code>main</code> metodu)</td></tr>
+<tr><td><code>application.properties</code></td><td>Ayarlar: veritabanı adresi, şifre vb.</td></tr>
+<tr><td><code>domain/</code></td><td>Entity'ler = veritabanı tabloları</td></tr>
+<tr><td><code>repository/</code>, <code>service/</code>, <code>controller/</code></td><td>Katmanlar (aşağıda)</td></tr>
+</table>
+<p><b>Anotasyon</b> (<code>@</code> ile başlayanlar): Spring'e "bu sınıf/alan özel, onunla şunu yap" diyen etiketler.</p>
+</div>
+
+<div class="q">
+<h3>Bir istek uygulamanın içinde nasıl ilerliyor? (Katmanlı mimari)</h3>
+<pre>İstek → Controller → Service → Repository → Veritabanı
+Cevap ← Controller ← Service ← Repository ← (veriler)</pre>
+<table>
+<tr><th>Katman</th><th>Restoranda</th><th>Görevi</th></tr>
+<tr><td>Controller</td><td>Garson</td><td>İsteği alır, cevabı götürür</td></tr>
+<tr><td>Service</td><td>Aşçı</td><td>Asıl iş, kurallar, hesaplama</td></tr>
+<tr><td>Repository</td><td>Kiler</td><td>Veriyi getirir / kaydeder</td></tr>
+</table>
+<p>Garson (Controller) kilere (Repository) doğrudan gitmez, aşçıya (Service) gider.</p>
+<p><code>JpaRepository</code>'den türeyen repository'lerde hazır gelen metotlar: <code>findAll()</code>, <code>findById(id)</code>, <code>save(x)</code>, <code>deleteById(id)</code>.</p>
+<p><b>Dependency Injection:</b> <code>private final CategoryRepository repo;</code> nesnesini biz <code>new</code> ile oluşturmuyoruz, Spring veriyor.</p>
+</div>
+
+<div class="q">
+<h3>Uygulama hangi portta çalışıyor? (3306 sandım)</h3>
+<pre>Postman ──8080──▶ Spring Boot uygulaması ──3306──▶ MySQL</pre>
+<ul>
+<li><b>8080</b>: Bizim uygulamamız. Postman'de bunu yazıyoruz.</li>
+<li><b>3306</b>: MySQL'in portu. Oraya uygulama bağlanıyor, biz değil.</li>
+</ul>
+</div>
+
+<div class="q">
+<h3><code>@Column(nullable = false, unique = true)</code> ne demek?</h3>
+<ul>
+<li><code>unique = true</code>: Bu değer tabloda benzersiz olmalı (TC kimlik no gibi).</li>
+<li><code>nullable = false</code>: Bu alan boş bırakılamaz.</li>
+</ul>
+</div>
+
+<!-- ============================================================ -->
+<h2>JSON ve entity ilişkileri</h2>
+
+<div class="q">
+<h3><code>OrderItem.order</code> nerede, sonsuz döngü neden oluyor?</h3>
+<p><code>OrderItem</code> sınıfının içindeki <code>order</code> alanı. Karşı tarafı <code>Order</code> sınıfındaki <code>items</code> listesi. İki sınıf birbirini gösteriyor:</p>
+<pre>Order ──items──▶ OrderItem
+  ▲                  │
+  └──────order───────┘</pre>
+<p>Jackson (JSON'a çeviren kütüphane) Order → items → OrderItem → order → Order → ... diye sonsuza kadar gider ve <code>StackOverflowError</code> verir. Çözüm: döngüyü bir taraftan kesmek (<code>OrderItem.order</code> alanına <code>@JsonIgnore</code>).</p>
+</div>
+
+<div class="q">
+<h3><code>@JsonIgnore</code> ne işe yarıyor?</h3>
+<p>Jackson'a <b>"bu alanı JSON'a çevirirken atla"</b> der.</p>
+<table>
+<tr><th></th><th>Etkilenir mi?</th></tr>
+<tr><td>API'nin döndürdüğü JSON</td><td>Evet, alan görünmez</td></tr>
+<tr><td>Gelen JSON'u okuma (<code>@RequestBody</code>)</td><td>Evet, yok sayılır</td></tr>
+<tr><td>Veritabanı kolonu</td><td>Hayır, değişmez</td></tr>
+<tr><td>Java'da <code>getOrder()</code></td><td>Hayır, normal çalışır</td></tr>
+</table>
+<p>Kullanım yerleri: döngü kırmak, şifre gibi hassas alanı gizlemek, gereksiz veriyi göstermemek. Dezavantajı: her yerde geçerli; büyük projelerde bunun yerine DTO kullanılır.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2>Ders 1: Uygulamayı çalıştırma, Postman, HTTP</h2>
+
+<div class="q">
+<h3>H2 nedir, nasıl çalıştırıyoruz?</h3>
+<p>H2, uygulamanın içinde bellekte çalışan küçük bir veritabanı. Kurulum gerekmez; uygulama kapanınca veriler silinir.</p>
+<ul>
+<li><code>pom.xml</code>'de H2'nin <code>scope</code>'u <code>runtime</code>: uygulama çalışırken de kullanılabilir (<code>test</code> = sadece testlerde).</li>
+<li><code>application-h2.properties</code> bir <b>profil</b>: sadece "h2 profiliyle çalış" denince okunur ve ana ayarların üzerine yazar.</li>
+</ul>
+<pre>./mvnw spring-boot:run -Dspring-boot.run.profiles=h2</pre>
+<p>H2 konsolu: <code>http://localhost:8080/h2-console</code> — JDBC URL <code>jdbc:h2:mem:computer_sales</code>, kullanıcı <code>sa</code>, şifre boş.</p>
+</div>
+
+<div class="q">
+<h3>Bu <code>filter</code> nereye gidiyor?</h3>
+<pre>@PostMapping("/filter")              ← ADRES (URL'nin parçası)
+public List&lt;Category&gt; filter(...)    ← sadece METODUN ADI</pre>
+<p>Tam adres: <code>POST /api/categories/filter</code>. Yolculuk:</p>
+<ol>
+<li><b>Controller</b>: <code>@RequestBody</code> gelen JSON'u <code>RequestDto</code> nesnesine çevirir.</li>
+<li><b>Service</b>: <code>findByFilters</code> metodu <code>CategoryService</code> dosyasında görünmez; <code>implements IBaseFilterService</code> sayesinde oradan "miras" gelir (<code>default</code> metot, 10 servis ortak kullanır).</li>
+<li><b>FiltersSpecification</b>: filtreyi SQL <code>WHERE</code> koşuluna çevirir.</li>
+<li><b>Repository</b>: SQL'i çalıştırır, sonuç JSON olarak geri döner.</li>
+</ol>
+</div>
+
+<div class="q">
+<h3>GET ile POST farkı ne?</h3>
+<table>
+<tr><th></th><th>GET</th><th>POST</th></tr>
+<tr><td>Amaç</td><td>Veri okumak</td><td>Veri göndermek (genelde yeni kayıt)</td></tr>
+<tr><td>Veri nerede?</td><td>Adreste</td><td>Gövdede (body), JSON</td></tr>
+</table>
+<p>Filter ucu okuma yaptığı halde POST kullanıyor, çünkü karmaşık filtre listesini gövdede göndermek daha kolay. Arama uçlarında yaygın bir istisna.</p>
+</div>
+
+<div class="q">
+<h3>Postman'de 400 hatası aldım, hata mesajı nasıl okunur?</h3>
+<p>Uzun hatada sadece 3 alana bak: <code>status</code> (ne tür), <code>message</code> (ne oldu), <code>path</code> (nerede). <code>trace</code> kısmını şimdilik okumana gerek yok.</p>
+<table>
+<tr><th>Kod</th><th>Anlamı</th><th>Kimin hatası?</th></tr>
+<tr><td>2xx (200)</td><td>Başarılı</td><td>—</td></tr>
+<tr><td>4xx (400, 404)</td><td>İstek hatalı</td><td>İsteği gönderenin (Postman)</td></tr>
+<tr><td>5xx (500)</td><td>Sunucu hatası</td><td>Kodun (Java)</td></tr>
+</table>
+<ul>
+<li><code>Required request body is missing</code> → gövde gönderilmemiş. Postman: <b>Body → raw → JSON</b> seç.</li>
+<li><code>JSON parse error: Unrecognized token 'yakup'</code> → gövde geçerli JSON değil.</li>
+<li><code>No static resource ...</code> (404) → o adreste bir uç yok (ya da kod derlenmemiş).</li>
+</ul>
+</div>
+
+<div class="q">
+<h3>JSON nasıl yazılır?</h3>
+<ul>
+<li>Nesne süslü parantez içinde: <code>{ ... }</code></li>
+<li>Anahtarlar ve metinler <b>çift tırnak</b> içinde: <code>"name": "Laptop"</code></li>
+<li>Sayılar tırnaksız: <code>1500</code>; liste köşeli parantez: <code>[1, 2]</code></li>
+<li>En basit geçerli JSON: <code>{}</code></li>
+</ul>
+<div class="warn"><code>{"name": "yakup"}</code> gönderince hata gelmedi ama filtre de çalışmadı: <code>RequestDto</code>'da <code>name</code> alanı yok, Spring tanımadığı anahtarları <b>sessizce yok sayar</b>. "Hata almadım" her zaman "istediğim oldu" demek değil.</div>
+</div>
+
+<div class="q">
+<h3>Olmayan bir kolonla (<code>isim</code>) filtre atarsam ne olur?</h3>
+<p>Cevap: <code>500</code> + <code>"Geçersiz kolon: isim"</code>. Mesaj doğru ama kod yanlış: hata istemcinin olduğu için 400 olmalı. Bunu ileride hata yönetimi (<code>@RestControllerAdvice</code>) dersinde düzelteceğiz.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2>Ders 2: İlk uç — tüm kategorileri listele</h2>
+
+<div class="q">
+<h3>Bir Java metodu neyden oluşur?</h3>
+<pre>public  List&lt;Category&gt;  findAll  ()  {  return repo.findAll();  }
+  ①          ②            ③      ④   ⑤           ⑥</pre>
+<ol>
+<li><code>public</code>: herkes çağırabilir</li>
+<li>Dönüş tipi: ne geri verecek</li>
+<li>Metodun adı</li>
+<li>Parantez: dışarıdan aldığı değerler (boşsa hiçbir şey almaz)</li>
+<li>Süslü parantez: gövde</li>
+<li><code>return ...;</code> sonucu geri ver (noktalı virgül unutma)</li>
+</ol>
+</div>
+
+<div class="q">
+<h3>Metodun adı <code>findAll</code>, içinde de <code>repo.findAll()</code> var. Karışmaz mı?</h3>
+<p>Karışmaz. <code>repo.</code> "repo nesnesinin findAll metodu" demek. Nokta, <b>nesne ile metodu bağlar</b>: <code>service.findAll()</code>, <code>repo.findAll()</code>. Nokta olmadan yazılsa metot kendi kendini çağırırdı.</p>
+</div>
+
+<div class="q">
+<h3>Controller'da ne yazdık, adres neden <code>/getAll</code> değil?</h3>
+<pre>@GetMapping
+public List&lt;Category&gt; findAll() {
+    return service.findAll();
+}</pre>
+<p>Sınıftaki <code>@RequestMapping("/api/categories")</code> ile metottaki adres birleşir:</p>
+<pre>"/api/categories" + @GetMapping              = GET /api/categories
+"/api/categories" + @GetMapping("/categories") = /api/categories/categories  (yanlış)</pre>
+<p><b>REST kuralı:</b> adreste fiil olmaz. İşi HTTP metodu söyler.</p>
+<table>
+<tr><th>Yanlış</th><th>Doğru</th></tr>
+<tr><td><code>GET /api/categories/getAll</code></td><td><code>GET /api/categories</code></td></tr>
+<tr><td><code>POST /api/categories/create</code></td><td><code>POST /api/categories</code></td></tr>
+<tr><td><code>DELETE /api/categories/delete/1</code></td><td><code>DELETE /api/categories/1</code></td></tr>
+</table>
+</div>
+
+<div class="q">
+<h3>Derleme hataları nasıl okunur?</h3>
+<p><code>Dosya.java:[31,12]</code> = 31. satır, 12. karakter.</p>
+<table>
+<tr><th>Hata</th><th>Anlamı / bendeki sebebi</th></tr>
+<tr><td><code>cannot find symbol: variable repo</code></td><td>Bu isimde değişken yok (Controller'da <code>repo</code> değil <code>service</code> var)</td></tr>
+<tr><td><code>variable service is already defined</code></td><td>Aynı değişken iki kez tanımlanmış</td></tr>
+<tr><td><code>reached end of file while parsing</code></td><td>Dosya sonunda fazlalık/eksik (kaçak <code>ş</code> harfi; Türkçe klavyede <code>;</code> yerinde)</td></tr>
+<tr><td><code>illegal start of expression</code></td><td>Java o noktada beklemediği bir şey gördü (metot içinde metot, yanlış yerde nokta)</td></tr>
+</table>
+<div class="tip"><b>Kural:</b> Her zaman <b>ilk hatayı</b> düzelt, tekrar derle. Arkadan gelen hataların çoğu zincirleme hatadır, kendiliğinden kaybolur.</div>
+<div class="tip"><b>Java büyük/küçük harfe duyarlı:</b> <code>@pathVariable</code> ≠ <code>@PathVariable</code>. Anotasyonlar büyük harfle başlar.</div>
+</div>
+
+<div class="q">
+<h3>Uygulamayı yeniden başlatmadım ama yeni kod çalıştı, neden?</h3>
+<p><code>spring-boot-devtools</code> derlenmiş dosyaları izler; kod derlenince uygulamayı kendisi yeniden başlatır. Terminalde yeni bir <code>Started ...</code> satırı çıkmadıysa Ctrl + C ile durdurup elle başlat. Not: H2 bellekte olduğu için yeniden başlayınca veriler silinir.</p>
+</div>
+
+<div class="q">
+<h3>Commit nedir, GitHub Desktop'ta nasıl atılır?</h3>
+<p>Commit, projenin o anki halinin fotoğrafı; bir şey bozulursa geri dönülebilir. GitHub Desktop: <b>Changes</b> sekmesinde değişikliklere bak → sol altta <b>Summary</b> yaz → <b>Commit to &lt;dal&gt;</b>. <b>Publish branch</b> dalı GitHub'a gönderir (<code>main</code> değişmez).</p>
+</div>
+
+<!-- ============================================================ -->
+<h2>Ders 3: Tek kategoriyi getirmek</h2>
+
+<div class="q">
+<h3><code>@PathVariable</code> ne işe yarıyor, neden koyduk?</h3>
+<p>Adresin içindeki değeri alıp metodun değişkenine koyar.</p>
+<pre>@GetMapping("/{id}")                         ← adreste "burada değer var, adı id"
+public Long findById(@PathVariable Long id) {  ← "o değeri al, id değişkenine koy"
+    return id;
+}
+
+/api/categories/5   →   id = 5</pre>
+<p>Koymasaydık Spring değeri <b>nereden</b> alacağını bilemezdi.</p>
+<table>
+<tr><th>Anotasyon</th><th>Değeri nereden alır?</th></tr>
+<tr><td><code>@RequestBody</code></td><td>İsteğin gövdesinden (Postman Body)</td></tr>
+<tr><td><code>@PathVariable</code></td><td>Adresin içinden</td></tr>
+</table>
+<p><code>{id}</code> içindeki isim ile parametre adı (<code>id</code>) aynı olmalı. <code>{ }</code> olmazsa "id" sabit bir yazı sanılır.</p>
+<p><code>/api/categories/abc</code> → <b>400</b>: parametre <code>Long</code> olduğu için Spring "abc"yi sayıya çeviremez ve hatayı isteği gönderene yükler.</p>
+</div>
+
+<div class="q">
+<h3><code>Optional</code> nedir, olmayan kategori neden 200 + null dönüyordu?</h3>
+<p><code>repo.findById(id)</code> doğrudan kategori değil bir <b>kutu</b> (<code>Optional&lt;Category&gt;</code>) döndürür: kategori varsa dolu, yoksa boş. Kutuyu açmadan döndürünce boş kutu <code>200 OK + null</code> olarak gidiyor; bu yanıltıcı, doğrusu <b>404 Not Found</b>.</p>
+<pre>public Category findById(Long id) {
+    return repo.findById(id)
+            .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, "Kategori bulunamadı: " + id));
+}</pre>
+<ul>
+<li><code>orElseThrow</code>: kutu doluysa içindekini verir, boşsa hata fırlatır.</li>
+<li><code>() -&gt;</code>: "kutu boşsa şunu çalıştır" kalıbı.</li>
+<li><code>ResponseStatusException</code> + <code>HttpStatus.NOT_FOUND</code>: Spring bu hatayı 404 olarak döndürür.</li>
+<li>Service artık <code>Category</code> döndürdüğü için Controller'ın dönüş tipi de <code>Category</code> olmalı; yoksa <code>incompatible types</code> derleme hatası çıkar.</li>
+</ul>
+</div>
+
+<!-- ============================================================ -->
+<h2>Araçlar</h2>
+
+<div class="q">
+<h3>VS Code eskiden kodu otomatik tamamlıyordu, artık yapmıyor. Neden?</h3>
+<p>Java eklentisi bu projede sadece <b>hafif modda</b> (Lightweight / syntax server) açılmıştı. Bu modda proje sınıfları ve Spring için tamamlama çalışmaz.</p>
+<ol>
+<li>Sol altta <b>Restricted Mode</b> yazıyorsa tıkla → <b>Trust</b> (klasöre güven).</li>
+<li>Alt durum çubuğunda Java simgesi <code>{ }</code> / "Lightweight Mode" görünüyorsa tıkla, ya da Cmd+Shift+P → <b>Java: Switch to Standard Mode</b>.</li>
+<li>Hâlâ olmuyorsa Cmd+Shift+P → <b>Java: Clean Java Language Server Workspace</b> → Restart.</li>
+</ol>
+<p>Proje yüklenirken sağ altta "Importing Maven project" yazar; bitince tamamlama gelir. Klasörü <code>GitHub/computer-sales-system-spring-boot</code> olarak (proje kökünden) açmak gerekir.</p>
+</div>
+
+</body>
+</html>

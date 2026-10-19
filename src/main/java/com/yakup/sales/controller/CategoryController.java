@@ -30,4 +30,9 @@ public class CategoryController {
     public List<Category> findAll() {
         return service.findAll();
     }
+    
+    @GetMapping("/{id}")
+    public Category findById(@PathVariable Long id) {
+        return service.findById(id);
+    }
 }
