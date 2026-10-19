@@ -2,6 +2,8 @@ package com.yakup.sales.domain;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,6 +31,7 @@ public class OrderItem {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @JsonIgnore // Order -> items -> order döngüsünü kırar
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;

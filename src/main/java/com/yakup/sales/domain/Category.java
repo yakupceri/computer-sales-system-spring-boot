@@ -1,5 +1,7 @@
 package com.yakup.sales.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,7 +15,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "categories")
-
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // LAZY proxy serileştirme hatasını önler
 public class Category {
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
