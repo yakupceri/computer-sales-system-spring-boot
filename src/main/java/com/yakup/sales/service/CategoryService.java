@@ -6,6 +6,9 @@ import com.yakup.sales.specification.FiltersSpecification;
 import com.yakup.sales.specification.IBaseFilterService;
 
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,4 +20,10 @@ public class CategoryService implements IBaseFilterService<Category, CategoryRep
 
     @Override public CategoryRepository getRepository() { return repo; }
     @Override public FiltersSpecification<Category> getFiltersSpecification() { return filters; }
+
+    public List<Category> findAll() {
+        return repo.findAll();
+    }
+
+
 }

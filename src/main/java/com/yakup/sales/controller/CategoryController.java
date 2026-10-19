@@ -25,4 +25,9 @@ public class CategoryController {
         var spec = service.getFiltersSpecification().getSearchSpecification(request);
         return service.getRepository().findAll(spec, pageable);
     }
+
+    @GetMapping
+    public List<Category> findAll() {
+        return service.findAll();
+    }
 }
