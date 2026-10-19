@@ -13,6 +13,7 @@ public class SearchRequestDto {
     private String column;
     private Object value;
     private Operation operation;
+    private String join; // Opsiyonel: ilişkili entity alanı (ör. "category")
 
     public enum Operation {
         EQUAL,
