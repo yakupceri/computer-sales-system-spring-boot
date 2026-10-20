@@ -32,4 +32,6 @@ public class CategoryService implements IBaseFilterService<Category, CategoryRep
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Kategori bulunamadı: " + id));
     }
 
+    
+
 }
