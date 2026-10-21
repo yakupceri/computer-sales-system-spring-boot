@@ -44,7 +44,7 @@ POST /api/products/search
 
 🛠️ Kullanılan Teknolojiler
 Teknoloji	Açıklama
-Java 17+	Programlama dili
+Java 25	Programlama dili
 Bahar Botu	Arka uç çerçevesi
 Spring Data JPA	Veri erişimi
 MySQL	Veritabanı
@@ -54,7 +54,7 @@ Maven	Build yönetimi
 Postacı	API testleri
 
 ⚙️ Gereksinimler
-Java 17
+Java 25
 MySQL
 Maven
 
@@ -76,5 +76,4 @@ POST	/api/categories
 🧪 API Testi
 
 Postman collection klasörü proje içinde mevcuttur ve API testleri için kullanılabilir.
-
 
