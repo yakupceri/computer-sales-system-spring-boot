@@ -1,79 +1,275 @@
-# Computer Sales System – Spring Boot
+# 🖥️ Computer Sales System
 
-Bu proje, bilgisayar satış domainine ait verileri yönetmek için geliştirilmiş **RESTful API** uygulamasıdır. Uygulama **Spring Boot** ile geliştirilmiş olup **katmanlı mimari** prensiplerine göre yapılandırılmıştır. Projede **dinamik filtreleme (JPA Specification)**, **DTO yapısı**, **servis katmanı**, **error handling** ve **MySQL veritabanı entegrasyonu** bulunmaktadır.
+Bilgisayar ve donanım satışı için geliştirilmiş bir **Spring Boot REST API**. Yanında bu API'yi kullanan bir **müşteri mağazası** ve bir **yönetim paneli** de var.
+
+Projenin öne çıkan özelliği **dinamik filtreleme**: Tek bir uç noktaya gönderilen JSON, JPA Specification ile SQL sorgusuna çevrilir. Bu sayede 10 farklı kaynak, ek kod yazmadan aranabilir, sıralanabilir ve sayfalanabilir.
+
+![Java](https://img.shields.io/badge/Java-25-ED8B00?logo=openjdk&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.6-6DB33F?logo=springboot&logoColor=white)
+![Spring Data JPA](https://img.shields.io/badge/Spring%20Data%20JPA-Hibernate%206-59666C?logo=hibernate&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-8-4479A1?logo=mysql&logoColor=white)
+![H2](https://img.shields.io/badge/H2-demo%20veritaban%C4%B1-1F6FEB)
+![License](https://img.shields.io/badge/lisans-MIT-blue)
+
+![Mağaza ana sayfası](docs/screenshots/magaza-ana-sayfa.png)
 
 ---
 
-## 🚀 Özellikler
+## İçindekiler
 
-- Ürün (**Product**), kategori (**Category**), müşteri (**Customer**) ve sipariş (**Order**) yönetimi
-- **Dinamik filtreleme** ile esnek arama (JPA Specification)
-- **Sayfalama ve sıralama desteği**
-- **DTO yapısı** ile veri taşımada güvenlik ve performans
-- Global exception handling (`@ControllerAdvice`)
-- Katmanlı mimari ile profesyonel backend tasarımı
+- [Özellikler](#-özellikler)
+- [Ekran görüntüleri](#-ekran-görüntüleri)
+- [Hızlı başlangıç](#-hızlı-başlangıç)
+- [API](#-api)
+- [Dinamik filtreleme](#-dinamik-filtreleme)
+- [Mimari](#-mimari)
+- [Veri modeli](#-veri-modeli)
+- [Testler](#-testler)
+- [Yol haritası](#-yol-haritası)
 
 ---
 
-## 🏗️ Proje Mimarisi
+## ✨ Özellikler
 
-com.yakup.sales
-├─ controller → REST API controller katmanı
-├─ service → İş mantığı katmanı
-│ └─ impl
-├─ repository → JPA veri erişim katmanı
-├─ specification → Dinamik filtreleme yapısı
-├─ dto → Request/Response veri transfer modelleri
-├─ domain → Entity modelleri
+**Backend**
+- 10 kaynak için REST uç noktaları: ürün, kategori, müşteri, adres, sipariş, sipariş kalemi, ödeme, fatura, stok hareketi, tedarikçi
+- **Dinamik filtreleme** (JPA Specification): `EQUAL`, `LIKE`, `GREATER_THAN`, `LESS_THAN`, ilişkili tablolarda `join`, `AND` / `OR` birleştirme
+- Filtre değerleri alanın gerçek tipine çevrilir. Böylece `"1000"` gibi bir değer `BigDecimal` olarak karşılaştırılır, metin olarak değil.
+- Geçersiz kolon, eksik alan ve yanlış tipteki değerler için anlaşılır hata mesajları
+- Sayfalama ve sıralama (`page`, `size`, `sort`)
+- Kategori listeleme ve id ile getirme. Kategori yoksa **404** döner.
+- Katmanlı mimari: Controller → Service → Repository
+- İki veritabanı profili: **MySQL** (varsayılan) ve kurulum gerektirmeyen **H2** (örnek veriyle birlikte)
 
-🔍 Dinamik Filtreleme (JPA Specification)
-Bu proje JPA Specification ile dinamik filtreleme desteği sunar.
+**Mağaza** (`/`)
+- Ana sayfa: haftanın ürünü, kategoriler, çok satanlar, yeni gelenler
+- Ürün listesi: kategori, fiyat aralığı ve stok filtreleri, sıralama, sayfalama. Hepsi sunucu tarafında, dinamik filtre API'siyle çalışır.
+- Ürün detayı ve benzer ürünler
+- Sepet (tarayıcıda saklanır)
+- Açık/koyu tema, mobil uyumlu tasarım
 
-✅ Örnek istek:
+**Yönetim paneli** (`/panel.html`)
+- Ciro, sipariş, müşteri ve stok değeri özetleri; kategoriye göre satış grafiği
+- Ürün, sipariş, müşteri, stok hareketi ve tedarikçi ekranları
+- **API Gezgini:** filtre isteklerini tarayıcıdan gönderip cevabı görme
 
-POST /api/products/search
+> Arayüzler bağımlılık kullanmayan HTML, CSS ve JavaScript ile yazıldı. Spring Boot bunları `src/main/resources/static` klasöründen sunar; ayrı bir frontend sunucusuna gerek yoktur.
+
+---
+
+## 📸 Ekran görüntüleri
+
+| Ürün listesi ve filtreler | Ürün detayı |
+|---|---|
+| ![Ürün listesi](docs/screenshots/magaza-urunler.png) | ![Ürün detayı](docs/screenshots/magaza-urun-detay.png) |
+
+**Yönetim paneli**
+
+![Yönetim paneli](docs/screenshots/yonetim-paneli.png)
+
+---
+
+## 🚀 Hızlı başlangıç
+
+### Gereksinimler
+- **Java 25**
+- Maven kurmana gerek yok, projedeki `./mvnw` yeterli.
+- MySQL sadece MySQL profiliyle çalıştırırken gerekli.
+
+### 1. Demo modu (önerilen, kurulum gerekmez)
+
+H2 bellek içi veritabanını kullanır. Uygulama her açılışta örnek veriyi yükler: 6 kategori, 18 ürün, 8 müşteri, 12 sipariş ve ilgili ödeme, fatura ve stok kayıtları.
+
+```bash
+git clone https://github.com/yakupceri/computer-sales-system-spring-boot.git
+cd computer-sales-system-spring-boot
+./mvnw spring-boot:run -Dspring-boot.run.profiles=h2
+```
+
+| Adres | Ne var? |
+|---|---|
+| http://localhost:8080 | Mağaza |
+| http://localhost:8080/panel.html | Yönetim paneli |
+| http://localhost:8080/h2-console | Veritabanı konsolu (JDBC URL: `jdbc:h2:mem:computer_sales`, kullanıcı: `sa`, şifre boş) |
+
+> H2 verileri bellekte tutar. Uygulama kapanınca veriler silinir, bir sonraki açılışta örnek veri yeniden yüklenir.
+
+### 2. MySQL ile
+
+Önce bir `computer_sales` veritabanı oluştur. Tablolar ilk çalıştırmada otomatik oluşturulur (`ddl-auto=update`). Bağlantı bilgileri ortam değişkenlerinden okunur:
+
+```bash
+export DB_PASSWORD=sifren
+export DB_USERNAME=root                                    # varsayılan: root
+export DB_URL=jdbc:mysql://localhost:3306/computer_sales   # varsayılan bu adres
+./mvnw spring-boot:run
+```
+
+---
+
+## 🔌 API
+
+Tüm uçlar `/api` altında.
+
+| Metot | Uç nokta | Açıklama |
+|---|---|---|
+| `GET` | `/api/categories` | Tüm kategoriler |
+| `GET` | `/api/categories/{id}` | Tek kategori. Bulunamazsa `404` döner. |
+| `POST` | `/api/{kaynak}/filter` | Dinamik filtreyle liste |
+| `POST` | `/api/{kaynak}/filter-page?page=0&size=10&sort=alan,asc` | Dinamik filtre, sayfalama ve sıralama |
+
+`{kaynak}` şunlardan biri olabilir:
+`products` · `categories` · `customers` · `addresses` · `orders` · `order-items` · `payments` · `invoices` · `stock-movements` · `suppliers`
+
+---
+
+## 🔍 Dinamik filtreleme
+
+Filtre isteği bir koşul listesinden oluşur. Her koşul bir kolon, bir operasyon ve bir değer içerir:
+
+```json
 {
-  "page": 0,
-  "size": 10,
+  "globalOperator": "AND",
   "searchRequestDto": [
-    { "column": "name", "operation": "LIKE", "value": "Lenovo" },
-    { "column": "price", "operation": "GT", "value": 1000 },
+    { "column": "name",  "operation": "LIKE",         "value": "lenovo" },
+    { "column": "price", "operation": "GREATER_THAN", "value": 30000 },
     { "join": "category", "column": "name", "operation": "EQUAL", "value": "Laptop" }
   ]
 }
+```
 
-🛠️ Kullanılan Teknolojiler
-Teknoloji	Açıklama
-Java 25	Programlama dili
-Bahar Botu	Arka uç çerçevesi
-Spring Data JPA	Veri erişimi
-MySQL	Veritabanı
-Lombok	Kod basitleştirme
-JPA Spesifikasyonu	Dinamik filtre
-Maven	Build yönetimi
-Postacı	API testleri
+| Alan | Açıklama |
+|---|---|
+| `column` | Entity'deki alan adı (`name`, `price`, `stockQuantity`…) |
+| `operation` | `EQUAL`, `LIKE` (büyük/küçük harf duyarsız), `GREATER_THAN`, `LESS_THAN` |
+| `value` | Aranan değer. Alanın tipine otomatik çevrilir. `EQUAL` ile `null` gönderilirse `IS NULL` sorgusu yapılır. |
+| `join` | *(opsiyonel)* İlişkili entity üzerinden filtrelemek için ilişki adı. Örneğin `category` |
+| `globalOperator` | Koşulları `AND` (varsayılan) ya da `OR` ile birleştirir |
 
-⚙️ Gereksinimler
-Java 25
-MySQL
-Maven
+Filtre listesi boş gönderilirse (`{}`) tüm kayıtlar döner.
 
-🎯 Projeyi Çalıştırma
-mvn clean install
-mvn spring-boot:run
+### Örnekler
 
-Uygulama açıldıktan sonra:
-http://localhost:8080
+```bash
+# Adında "lenovo" geçen, 30.000 ₺ üstü laptoplar
+curl -X POST http://localhost:8080/api/products/filter \
+  -H "Content-Type: application/json" \
+  -d '{"searchRequestDto":[
+        {"column":"name","operation":"LIKE","value":"lenovo"},
+        {"column":"price","operation":"GREATER_THAN","value":30000},
+        {"join":"category","column":"name","operation":"EQUAL","value":"Laptop"}]}'
+```
 
-📌 Örnek API Uçları
-HTTP	Endpoint
-GET	/api/products
-POST	/api/products
-POST	/api/products/search
-GET	/api/categories
-POST	/api/categories
+```bash
+# Monitörler, fiyata göre azalan, sayfa başına 5 kayıt
+curl -X POST "http://localhost:8080/api/products/filter-page?page=0&size=5&sort=price,desc" \
+  -H "Content-Type: application/json" \
+  -d '{"searchRequestDto":[{"join":"category","column":"name","operation":"EQUAL","value":"Monitör"}]}'
+```
 
-🧪 API Testi
+```bash
+# Laptop kategorisindekiler VEYA 3.000 ₺ altındakiler
+curl -X POST http://localhost:8080/api/products/filter \
+  -H "Content-Type: application/json" \
+  -d '{"globalOperator":"OR","searchRequestDto":[
+        {"join":"category","column":"name","operation":"EQUAL","value":"Laptop"},
+        {"column":"price","operation":"LESS_THAN","value":3000}]}'
+```
 
-Postman collection klasörü proje içinde mevcuttur ve API testleri için kullanılabilir.
+Olmayan bir kolon gönderilirse istek reddedilir ve hangi kolonun sorunlu olduğu söylenir:
 
+```json
+{ "status": 500, "message": "Geçersiz kolon: fiyat" }
+```
+
+---
+
+## 🏗️ Mimari
+
+```mermaid
+flowchart LR
+    UI["Mağaza / Yönetim paneli<br/>(static HTML + JS)"] -->|HTTP + JSON| C[Controller]
+    P[Postman / curl] -->|HTTP + JSON| C
+    C --> S[Service]
+    S --> R[Repository<br/>JpaRepository + JpaSpecificationExecutor]
+    S -. filtre .-> F[FiltersSpecification<br/>JSON → WHERE]
+    F -.-> R
+    R --> DB[(MySQL / H2)]
+```
+
+```
+src/main/java/com/yakup/sales
+├── controller/      REST uç noktaları (her kaynak için bir controller)
+├── service/         İş mantığı; IBaseFilterService ile ortak filtre davranışı
+├── repository/      Spring Data JPA repository'leri
+├── specification/   FiltersSpecification: filtre isteğini JPA Specification'a çevirir
+├── dto/             RequestDto, SearchRequestDto
+└── domain/          JPA entity'leri
+
+src/main/resources
+├── static/          Mağaza (index.html) ve yönetim paneli (panel.html)
+├── application.properties       MySQL ayarları
+├── application-h2.properties    H2 demo profili
+└── data-h2.sql                  Demo verisi
+```
+
+Filtreleme, `IBaseFilterService` arayüzündeki `default` metot sayesinde 10 servis tarafından ortak kullanılır. Yeni bir kaynağın aranabilir olması için repository'nin `JpaSpecificationExecutor`'ı genişletmesi yeterlidir.
+
+---
+
+## 🗂️ Veri modeli
+
+```mermaid
+erDiagram
+    CATEGORY ||--o{ PRODUCT : "içerir"
+    PRODUCT ||--o{ ORDER_ITEM : "satılır"
+    PRODUCT ||--o{ STOCK_MOVEMENT : "hareket"
+    CUSTOMER ||--|| ADDRESS : "adres"
+    CUSTOMER ||--o{ ORDER : "verir"
+    ORDER ||--o{ ORDER_ITEM : "kalemler"
+    ORDER ||--o| PAYMENT : "ödeme"
+    ORDER ||--o| INVOICE : "fatura"
+    SUPPLIER {
+        string name
+        string email
+        string phone
+    }
+```
+
+---
+
+## 🧪 Testler
+
+```bash
+./mvnw test
+```
+
+- `FiltersSpecificationTest`: Dinamik filtrenin sayısal karşılaştırma, `LIKE`, `join`, boş filtre ve hatalı istek davranışlarını H2 üzerinde test eder.
+- `ComputerSalesSystemApplicationTests`: Uygulamanın H2 profiliyle ayağa kalktığını doğrular.
+
+---
+
+## 🗺️ Yol haritası
+
+- [x] Dinamik filtreleme, sayfalama ve sıralama
+- [x] Kategori listeleme ve id ile getirme (404 desteği)
+- [x] H2 demo profili ve örnek veri
+- [x] Müşteri mağazası ve yönetim paneli
+- [ ] Ekleme, güncelleme ve silme uçları (`POST`, `PUT`, `DELETE`)
+- [ ] Sipariş oluşturma (stok düşme, toplam hesaplama). Mağazadaki "Siparişi tamamla" butonu buna bağlanacak.
+- [ ] Request/Response DTO'ları ve `@Valid` ile doğrulama
+- [ ] `@RestControllerAdvice` ile global hata yönetimi. Hatalı filtrelerin `400` dönmesi de bu adımda gelecek.
+- [ ] OpenAPI / Swagger dokümantasyonu
+- [ ] Spring Security ile kimlik doğrulama
+
+---
+
+## 📚 Ders notları
+
+Bu proje üzerinde Spring Boot öğrenirken sorduğum sorular ve cevapları [`ders-notlari/`](ders-notlari/) klasöründe ([PDF](ders-notlari/Spring-Boot-Ders-Notlari.pdf)).
+
+---
+
+## 📄 Lisans
+
+[MIT](LICENSE)
