@@ -1,0 +1,140 @@
+-- Demo verisi: sadece 'h2' profiliyle çalışırken yüklenir (application-h2.properties).
+
+-- Kategoriler
+INSERT INTO categories (name, description) VALUES ('Laptop', 'Dizüstü bilgisayarlar');
+INSERT INTO categories (name, description) VALUES ('Masaüstü', 'Masaüstü ve oyun bilgisayarları');
+INSERT INTO categories (name, description) VALUES ('Monitör', 'Ofis ve oyun monitörleri');
+INSERT INTO categories (name, description) VALUES ('Klavye & Mouse', 'Mekanik klavyeler ve oyuncu mouse''ları');
+INSERT INTO categories (name, description) VALUES ('Bileşen', 'Ekran kartı, işlemci, RAM ve SSD');
+INSERT INTO categories (name, description) VALUES ('Aksesuar', 'Kulaklık, webcam ve çantalar');
+
+-- Ürünler
+INSERT INTO products (name, sku, price, stock_quantity, category_id) VALUES ('Lenovo ThinkPad X1 Carbon', 'LT-TP-X1C', 64999.00, 12, 1);
+INSERT INTO products (name, sku, price, stock_quantity, category_id) VALUES ('Apple MacBook Air M3 13"', 'LT-MBA-M3', 52999.00, 8, 1);
+INSERT INTO products (name, sku, price, stock_quantity, category_id) VALUES ('ASUS ROG Zephyrus G14', 'LT-ROG-G14', 74999.00, 4, 1);
+INSERT INTO products (name, sku, price, stock_quantity, category_id) VALUES ('Dell XPS 15', 'LT-XPS-15', 69999.00, 3, 1);
+INSERT INTO products (name, sku, price, stock_quantity, category_id) VALUES ('HP Victus 16 Oyun Bilgisayarı', 'DT-HP-V16', 38999.00, 6, 2);
+INSERT INTO products (name, sku, price, stock_quantity, category_id) VALUES ('MSI Infinite RS Masaüstü', 'DT-MSI-INF', 89999.00, 2, 2);
+INSERT INTO products (name, sku, price, stock_quantity, category_id) VALUES ('Samsung Odyssey G7 27"', 'MN-SAM-G7', 17499.00, 15, 3);
+INSERT INTO products (name, sku, price, stock_quantity, category_id) VALUES ('LG UltraFine 4K 32"', 'MN-LG-4K32', 21999.00, 7, 3);
+INSERT INTO products (name, sku, price, stock_quantity, category_id) VALUES ('Dell P2423D 24"', 'MN-DELL-P24', 8499.00, 22, 3);
+INSERT INTO products (name, sku, price, stock_quantity, category_id) VALUES ('Logitech MX Keys S', 'KM-LOG-MXK', 4299.00, 30, 4);
+INSERT INTO products (name, sku, price, stock_quantity, category_id) VALUES ('Keychron K8 Pro Mekanik', 'KM-KEY-K8P', 3999.00, 18, 4);
+INSERT INTO products (name, sku, price, stock_quantity, category_id) VALUES ('Razer DeathAdder V3', 'KM-RZR-DAV3', 2699.00, 25, 4);
+INSERT INTO products (name, sku, price, stock_quantity, category_id) VALUES ('NVIDIA GeForce RTX 4070 Super', 'BL-NV-4070S', 27999.00, 5, 5);
+INSERT INTO products (name, sku, price, stock_quantity, category_id) VALUES ('AMD Ryzen 7 7800X3D', 'BL-AMD-7800', 14999.00, 9, 5);
+INSERT INTO products (name, sku, price, stock_quantity, category_id) VALUES ('Samsung 990 Pro 2TB NVMe SSD', 'BL-SAM-990', 6499.00, 40, 5);
+INSERT INTO products (name, sku, price, stock_quantity, category_id) VALUES ('Corsair Vengeance 32GB DDR5', 'BL-COR-32D5', 4199.00, 1, 5);
+INSERT INTO products (name, sku, price, stock_quantity, category_id) VALUES ('Sony WH-1000XM5 Kulaklık', 'AK-SNY-XM5', 11999.00, 11, 6);
+INSERT INTO products (name, sku, price, stock_quantity, category_id) VALUES ('Logitech C920 Webcam', 'AK-LOG-C920', 2499.00, 0, 6);
+
+-- Adresler ve müşteriler
+INSERT INTO addresses (country, city, district, street, postal_code) VALUES ('Türkiye', 'İstanbul', 'Kadıköy', 'Moda Cad. No:12', '34710');
+INSERT INTO addresses (country, city, district, street, postal_code) VALUES ('Türkiye', 'Ankara', 'Çankaya', 'Tunalı Hilmi Cad. No:45', '06680');
+INSERT INTO addresses (country, city, district, street, postal_code) VALUES ('Türkiye', 'İzmir', 'Karşıyaka', 'Cemal Gürsel Cad. No:301', '35530');
+INSERT INTO addresses (country, city, district, street, postal_code) VALUES ('Türkiye', 'Bursa', 'Nilüfer', 'FSM Bulvarı No:88', '16110');
+INSERT INTO addresses (country, city, district, street, postal_code) VALUES ('Türkiye', 'Antalya', 'Muratpaşa', 'Işıklar Cad. No:7', '07100');
+INSERT INTO addresses (country, city, district, street, postal_code) VALUES ('Türkiye', 'İstanbul', 'Beşiktaş', 'Barbaros Bulvarı No:150', '34353');
+INSERT INTO addresses (country, city, district, street, postal_code) VALUES ('Türkiye', 'Eskişehir', 'Tepebaşı', 'İsmet İnönü Cad. No:23', '26170');
+INSERT INTO addresses (country, city, district, street, postal_code) VALUES ('Türkiye', 'Trabzon', 'Ortahisar', 'Uzun Sok. No:19', '61030');
+INSERT INTO customers (first_name, last_name, email, address_id) VALUES ('Elif', 'Yılmaz', 'elif.yilmaz@example.com', 1);
+INSERT INTO customers (first_name, last_name, email, address_id) VALUES ('Mehmet', 'Kaya', 'mehmet.kaya@example.com', 2);
+INSERT INTO customers (first_name, last_name, email, address_id) VALUES ('Zeynep', 'Demir', 'zeynep.demir@example.com', 3);
+INSERT INTO customers (first_name, last_name, email, address_id) VALUES ('Can', 'Şahin', 'can.sahin@example.com', 4);
+INSERT INTO customers (first_name, last_name, email, address_id) VALUES ('Ayşe', 'Çelik', 'ayse.celik@example.com', 5);
+INSERT INTO customers (first_name, last_name, email, address_id) VALUES ('Burak', 'Öztürk', 'burak.ozturk@example.com', 6);
+INSERT INTO customers (first_name, last_name, email, address_id) VALUES ('Selin', 'Arslan', 'selin.arslan@example.com', 7);
+INSERT INTO customers (first_name, last_name, email, address_id) VALUES ('Emre', 'Doğan', 'emre.dogan@example.com', 8);
+
+-- Tedarikçiler
+INSERT INTO suppliers (name, email, phone) VALUES ('Teknoloji Dağıtım A.Ş.', 'satis@teknodagitim.example.com', '0212 555 10 10');
+INSERT INTO suppliers (name, email, phone) VALUES ('Anadolu Bilişim Ltd.', 'info@anadolubilisim.example.com', '0312 555 20 20');
+INSERT INTO suppliers (name, email, phone) VALUES ('Ege Donanım', 'siparis@egedonanim.example.com', '0232 555 30 30');
+INSERT INTO suppliers (name, email, phone) VALUES ('Marmara Elektronik', 'destek@marmaraelektronik.example.com', '0224 555 40 40');
+
+-- Siparişler, kalemler, ödemeler, faturalar ve stok çıkışları
+INSERT INTO orders (order_date, customer_id, total_price) VALUES ('2026-09-02T10:15:00Z', 1, 69298.00);
+INSERT INTO order_items (quantity, price, product_id, order_id) VALUES (1, 64999.00, 1, 1);
+INSERT INTO stock_movements (quantity_change, movement_date, type, product_id) VALUES (-1, '2026-09-02T10:15:00Z', 'OUT', 1);
+INSERT INTO order_items (quantity, price, product_id, order_id) VALUES (1, 4299.00, 10, 1);
+INSERT INTO stock_movements (quantity_change, movement_date, type, product_id) VALUES (-1, '2026-09-02T10:15:00Z', 'OUT', 10);
+INSERT INTO payments (method, amount, payment_date, order_id) VALUES ('CREDIT_CARD', 69298.00, '2026-09-02T10:15:00Z', 1);
+INSERT INTO invoices (invoice_number, issued_at, order_id) VALUES ('FTR-2026-0001', '2026-09-02T10:15:00Z', 1);
+INSERT INTO orders (order_date, customer_id, total_price) VALUES ('2026-09-05T14:40:00Z', 2, 34998.00);
+INSERT INTO order_items (quantity, price, product_id, order_id) VALUES (2, 17499.00, 7, 2);
+INSERT INTO stock_movements (quantity_change, movement_date, type, product_id) VALUES (-2, '2026-09-05T14:40:00Z', 'OUT', 7);
+INSERT INTO payments (method, amount, payment_date, order_id) VALUES ('TRANSFER', 34998.00, '2026-09-05T14:40:00Z', 2);
+INSERT INTO invoices (invoice_number, issued_at, order_id) VALUES ('FTR-2026-0002', '2026-09-05T14:40:00Z', 2);
+INSERT INTO orders (order_date, customer_id, total_price) VALUES ('2026-09-11T09:05:00Z', 3, 64998.00);
+INSERT INTO order_items (quantity, price, product_id, order_id) VALUES (1, 52999.00, 2, 3);
+INSERT INTO stock_movements (quantity_change, movement_date, type, product_id) VALUES (-1, '2026-09-11T09:05:00Z', 'OUT', 2);
+INSERT INTO order_items (quantity, price, product_id, order_id) VALUES (1, 11999.00, 17, 3);
+INSERT INTO stock_movements (quantity_change, movement_date, type, product_id) VALUES (-1, '2026-09-11T09:05:00Z', 'OUT', 17);
+INSERT INTO payments (method, amount, payment_date, order_id) VALUES ('CREDIT_CARD', 64998.00, '2026-09-11T09:05:00Z', 3);
+INSERT INTO invoices (invoice_number, issued_at, order_id) VALUES ('FTR-2026-0003', '2026-09-11T09:05:00Z', 3);
+INSERT INTO orders (order_date, customer_id, total_price) VALUES ('2026-09-18T19:30:00Z', 4, 51396.00);
+INSERT INTO order_items (quantity, price, product_id, order_id) VALUES (1, 27999.00, 13, 4);
+INSERT INTO stock_movements (quantity_change, movement_date, type, product_id) VALUES (-1, '2026-09-18T19:30:00Z', 'OUT', 13);
+INSERT INTO order_items (quantity, price, product_id, order_id) VALUES (1, 14999.00, 14, 4);
+INSERT INTO stock_movements (quantity_change, movement_date, type, product_id) VALUES (-1, '2026-09-18T19:30:00Z', 'OUT', 14);
+INSERT INTO order_items (quantity, price, product_id, order_id) VALUES (2, 4199.00, 16, 4);
+INSERT INTO stock_movements (quantity_change, movement_date, type, product_id) VALUES (-2, '2026-09-18T19:30:00Z', 'OUT', 16);
+INSERT INTO payments (method, amount, payment_date, order_id) VALUES ('CREDIT_CARD', 51396.00, '2026-09-18T19:30:00Z', 4);
+INSERT INTO invoices (invoice_number, issued_at, order_id) VALUES ('FTR-2026-0004', '2026-09-18T19:30:00Z', 4);
+INSERT INTO orders (order_date, customer_id, total_price) VALUES ('2026-09-24T12:00:00Z', 5, 33594.00);
+INSERT INTO order_items (quantity, price, product_id, order_id) VALUES (3, 8499.00, 9, 5);
+INSERT INTO stock_movements (quantity_change, movement_date, type, product_id) VALUES (-3, '2026-09-24T12:00:00Z', 'OUT', 9);
+INSERT INTO order_items (quantity, price, product_id, order_id) VALUES (3, 2699.00, 12, 5);
+INSERT INTO stock_movements (quantity_change, movement_date, type, product_id) VALUES (-3, '2026-09-24T12:00:00Z', 'OUT', 12);
+INSERT INTO payments (method, amount, payment_date, order_id) VALUES ('TRANSFER', 33594.00, '2026-09-24T12:00:00Z', 5);
+INSERT INTO invoices (invoice_number, issued_at, order_id) VALUES ('FTR-2026-0005', '2026-09-24T12:00:00Z', 5);
+INSERT INTO orders (order_date, customer_id, total_price) VALUES ('2026-09-29T16:20:00Z', 1, 12998.00);
+INSERT INTO order_items (quantity, price, product_id, order_id) VALUES (2, 6499.00, 15, 6);
+INSERT INTO stock_movements (quantity_change, movement_date, type, product_id) VALUES (-2, '2026-09-29T16:20:00Z', 'OUT', 15);
+INSERT INTO payments (method, amount, payment_date, order_id) VALUES ('CASH', 12998.00, '2026-09-29T16:20:00Z', 6);
+INSERT INTO invoices (invoice_number, issued_at, order_id) VALUES ('FTR-2026-0006', '2026-09-29T16:20:00Z', 6);
+INSERT INTO orders (order_date, customer_id, total_price) VALUES ('2026-10-03T11:45:00Z', 6, 78998.00);
+INSERT INTO order_items (quantity, price, product_id, order_id) VALUES (1, 74999.00, 3, 7);
+INSERT INTO stock_movements (quantity_change, movement_date, type, product_id) VALUES (-1, '2026-10-03T11:45:00Z', 'OUT', 3);
+INSERT INTO order_items (quantity, price, product_id, order_id) VALUES (1, 3999.00, 11, 7);
+INSERT INTO stock_movements (quantity_change, movement_date, type, product_id) VALUES (-1, '2026-10-03T11:45:00Z', 'OUT', 11);
+INSERT INTO payments (method, amount, payment_date, order_id) VALUES ('CREDIT_CARD', 78998.00, '2026-10-03T11:45:00Z', 7);
+INSERT INTO invoices (invoice_number, issued_at, order_id) VALUES ('FTR-2026-0007', '2026-10-03T11:45:00Z', 7);
+INSERT INTO orders (order_date, customer_id, total_price) VALUES ('2026-10-07T13:10:00Z', 7, 24498.00);
+INSERT INTO order_items (quantity, price, product_id, order_id) VALUES (1, 21999.00, 8, 8);
+INSERT INTO stock_movements (quantity_change, movement_date, type, product_id) VALUES (-1, '2026-10-07T13:10:00Z', 'OUT', 8);
+INSERT INTO order_items (quantity, price, product_id, order_id) VALUES (1, 2499.00, 18, 8);
+INSERT INTO stock_movements (quantity_change, movement_date, type, product_id) VALUES (-1, '2026-10-07T13:10:00Z', 'OUT', 18);
+INSERT INTO payments (method, amount, payment_date, order_id) VALUES ('TRANSFER', 24498.00, '2026-10-07T13:10:00Z', 8);
+INSERT INTO invoices (invoice_number, issued_at, order_id) VALUES ('FTR-2026-0008', '2026-10-07T13:10:00Z', 8);
+INSERT INTO orders (order_date, customer_id, total_price) VALUES ('2026-10-12T17:55:00Z', 8, 41698.00);
+INSERT INTO order_items (quantity, price, product_id, order_id) VALUES (1, 38999.00, 5, 9);
+INSERT INTO stock_movements (quantity_change, movement_date, type, product_id) VALUES (-1, '2026-10-12T17:55:00Z', 'OUT', 5);
+INSERT INTO order_items (quantity, price, product_id, order_id) VALUES (1, 2699.00, 12, 9);
+INSERT INTO stock_movements (quantity_change, movement_date, type, product_id) VALUES (-1, '2026-10-12T17:55:00Z', 'OUT', 12);
+INSERT INTO payments (method, amount, payment_date, order_id) VALUES ('CREDIT_CARD', 41698.00, '2026-10-12T17:55:00Z', 9);
+INSERT INTO invoices (invoice_number, issued_at, order_id) VALUES ('FTR-2026-0009', '2026-10-12T17:55:00Z', 9);
+INSERT INTO orders (order_date, customer_id, total_price) VALUES ('2026-10-15T08:30:00Z', 2, 69999.00);
+INSERT INTO order_items (quantity, price, product_id, order_id) VALUES (1, 69999.00, 4, 10);
+INSERT INTO stock_movements (quantity_change, movement_date, type, product_id) VALUES (-1, '2026-10-15T08:30:00Z', 'OUT', 4);
+INSERT INTO payments (method, amount, payment_date, order_id) VALUES ('CREDIT_CARD', 69999.00, '2026-10-15T08:30:00Z', 10);
+INSERT INTO invoices (invoice_number, issued_at, order_id) VALUES ('FTR-2026-0010', '2026-10-15T08:30:00Z', 10);
+INSERT INTO orders (order_date, customer_id, total_price) VALUES ('2026-10-18T15:00:00Z', 3, 111797.00);
+INSERT INTO order_items (quantity, price, product_id, order_id) VALUES (1, 89999.00, 6, 11);
+INSERT INTO stock_movements (quantity_change, movement_date, type, product_id) VALUES (-1, '2026-10-18T15:00:00Z', 'OUT', 6);
+INSERT INTO order_items (quantity, price, product_id, order_id) VALUES (1, 17499.00, 7, 11);
+INSERT INTO stock_movements (quantity_change, movement_date, type, product_id) VALUES (-1, '2026-10-18T15:00:00Z', 'OUT', 7);
+INSERT INTO order_items (quantity, price, product_id, order_id) VALUES (1, 4299.00, 10, 11);
+INSERT INTO stock_movements (quantity_change, movement_date, type, product_id) VALUES (-1, '2026-10-18T15:00:00Z', 'OUT', 10);
+INSERT INTO payments (method, amount, payment_date, order_id) VALUES ('TRANSFER', 111797.00, '2026-10-18T15:00:00Z', 11);
+INSERT INTO invoices (invoice_number, issued_at, order_id) VALUES ('FTR-2026-0011', '2026-10-18T15:00:00Z', 11);
+INSERT INTO orders (order_date, customer_id, total_price) VALUES ('2026-10-20T10:25:00Z', 5, 23998.00);
+INSERT INTO order_items (quantity, price, product_id, order_id) VALUES (2, 11999.00, 17, 12);
+INSERT INTO stock_movements (quantity_change, movement_date, type, product_id) VALUES (-2, '2026-10-20T10:25:00Z', 'OUT', 17);
+INSERT INTO payments (method, amount, payment_date, order_id) VALUES ('CASH', 23998.00, '2026-10-20T10:25:00Z', 12);
+INSERT INTO invoices (invoice_number, issued_at, order_id) VALUES ('FTR-2026-0012', '2026-10-20T10:25:00Z', 12);
+
+-- Stok girişleri
+INSERT INTO stock_movements (quantity_change, movement_date, type, product_id) VALUES (10, '2026-10-19T09:00:00Z', 'IN', 16);
+INSERT INTO stock_movements (quantity_change, movement_date, type, product_id) VALUES (15, '2026-10-21T09:00:00Z', 'IN', 18);
+INSERT INTO stock_movements (quantity_change, movement_date, type, product_id) VALUES (5, '2026-10-14T09:00:00Z', 'IN', 4);
