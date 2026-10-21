@@ -37,7 +37,8 @@ Projenin öne çıkan özelliği **dinamik filtreleme**: Tek bir uç noktaya gö
 - Filtre değerleri alanın gerçek tipine çevrilir. Böylece `"1000"` gibi bir değer `BigDecimal` olarak karşılaştırılır, metin olarak değil.
 - Geçersiz kolon, eksik alan ve yanlış tipteki değerler için anlaşılır hata mesajları
 - Sayfalama ve sıralama (`page`, `size`, `sort`)
-- Kategori listeleme ve id ile getirme. Kategori yoksa **404** döner.
+- Kategoriler için tam **CRUD**: listeleme, getirme, ekleme, güncelleme, silme. Doğru HTTP kodları döner: `201`, `204`, `400`, `404`, `409`.
+- `@Valid` ile doğrulama; aynı isimde kategori ve ürünü olan kategoriyi silme `409 Conflict` ile reddedilir.
 - Katmanlı mimari: Controller → Service → Repository
 - İki veritabanı profili: **MySQL** (varsayılan) ve kurulum gerektirmeyen **H2** (örnek veriyle birlikte)
 
@@ -50,6 +51,7 @@ Projenin öne çıkan özelliği **dinamik filtreleme**: Tek bir uç noktaya gö
 
 **Yönetim paneli** (`/panel.html`)
 - Ciro, sipariş, müşteri ve stok değeri özetleri; kategoriye göre satış grafiği
+- Kategori ekleme, düzenleme ve silme formu
 - Ürün, sipariş, müşteri, stok hareketi ve tedarikçi ekranları
 - **API Gezgini:** filtre isteklerini tarayıcıdan gönderip cevabı görme
 
@@ -115,8 +117,19 @@ Tüm uçlar `/api` altında.
 |---|---|---|
 | `GET` | `/api/categories` | Tüm kategoriler |
 | `GET` | `/api/categories/{id}` | Tek kategori. Bulunamazsa `404` döner. |
+| `POST` | `/api/categories` | Kategori ekler, `201 Created` döner |
+| `PUT` | `/api/categories/{id}` | Kategoriyi günceller |
+| `DELETE` | `/api/categories/{id}` | Kategoriyi siler, `204 No Content` döner. Bağlı ürün varsa `409`. |
 | `POST` | `/api/{kaynak}/filter` | Dinamik filtreyle liste |
 | `POST` | `/api/{kaynak}/filter-page?page=0&size=10&sort=alan,asc` | Dinamik filtre, sayfalama ve sıralama |
+
+```bash
+# Yeni kategori ekle
+curl -X POST http://localhost:8080/api/categories \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Tablet","description":"Tablet bilgisayarlar"}'
+# → 201 Created  {"id":7,"name":"Tablet","description":"Tablet bilgisayarlar"}
+```
 
 `{kaynak}` şunlardan biri olabilir:
 `products` · `categories` · `customers` · `addresses` · `orders` · `order-items` · `payments` · `invoices` · `stock-movements` · `suppliers`
@@ -245,6 +258,7 @@ erDiagram
 ```
 
 - `FiltersSpecificationTest`: Dinamik filtrenin sayısal karşılaştırma, `LIKE`, `join`, boş filtre ve hatalı istek davranışlarını H2 üzerinde test eder.
+- `CategoryControllerTest`: Kategori CRUD uçlarını MockMvc ile uçtan uca test eder (201, 400, 404, 409, 204).
 - `ComputerSalesSystemApplicationTests`: Uygulamanın H2 profiliyle ayağa kalktığını doğrular.
 
 ---
@@ -252,10 +266,10 @@ erDiagram
 ## 🗺️ Yol haritası
 
 - [x] Dinamik filtreleme, sayfalama ve sıralama
-- [x] Kategori listeleme ve id ile getirme (404 desteği)
+- [x] Kategoriler için CRUD (`POST`, `PUT`, `DELETE`), doğrulama ve anlamlı HTTP kodları
 - [x] H2 demo profili ve örnek veri
 - [x] Müşteri mağazası ve yönetim paneli
-- [ ] Ekleme, güncelleme ve silme uçları (`POST`, `PUT`, `DELETE`)
+- [ ] Diğer kaynaklar (ürün, müşteri…) için ekleme, güncelleme ve silme uçları
 - [ ] Sipariş oluşturma (stok düşme, toplam hesaplama). Mağazadaki "Siparişi tamamla" butonu buna bağlanacak.
 - [ ] Request/Response DTO'ları ve `@Valid` ile doğrulama
 - [ ] `@RestControllerAdvice` ile global hata yönetimi. Hatalı filtrelerin `400` dönmesi de bu adımda gelecek.

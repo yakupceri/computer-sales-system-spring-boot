@@ -217,6 +217,14 @@ tbody tr:hover td { background: var(--surface-2); }
 .cat-stats strong { font-size: 18px; }
 .cat-stats small { color: var(--muted); font-size: 12px; }
 
+.cat-actions { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.cat-actions button { padding: 5px 10px; font-size: 13px; }
+button.danger { color: var(--danger); }
+button.danger:hover { background: var(--danger-soft); color: var(--danger); }
+.form-msg { margin-top: 12px; padding: 9px 12px; border-radius: 10px; font-weight: 500; }
+.form-msg.ok { background: var(--success-soft); color: var(--success); }
+.form-msg.err { background: var(--danger-soft); color: var(--danger); }
+
 .code-block {
   margin: 0; padding: 12px 14px; border-radius: 10px;
   background: var(--surface-2); border: 1px solid var(--border);

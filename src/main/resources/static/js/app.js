@@ -61,7 +61,7 @@
       let data = null;
       try { data = text ? JSON.parse(text) : null; } catch { data = text; }
       if (!res.ok) {
-        const msg = (data && data.message) || res.statusText || "İstek başarısız";
+        const msg = (data && data.errors && data.errors[0] && data.errors[0].defaultMessage) || (data && data.message) || res.statusText || "İstek başarısız";
         const err = new Error(`${res.status} · ${msg}`);
         err.status = res.status;
         throw err;
@@ -351,7 +351,7 @@
   // ===== Kategoriler
   routes.kategoriler = {
     title: "Kategoriler",
-    subtitle: "GET /api/categories ile listelenir",
+    subtitle: "Ekleme, düzenleme ve silme: POST / PUT / DELETE /api/categories",
     async render() {
       view.innerHTML = loading(5);
       const [categories, products, items] = await Promise.all([
@@ -363,7 +363,16 @@
           .reduce((s, i) => s + Number(i.price || 0) * (i.quantity || 0), 0);
         return { count: ps.length, stock: ps.reduce((s, p) => s + (p.stockQuantity || 0), 0), sales };
       };
-      view.innerHTML = `<div class="grid cards">
+      view.innerHTML = `
+        <section class="card card-body">
+          <form class="toolbar" id="catForm">
+            <div class="field"><label for="cn">Yeni kategori adı</label><input id="cn" required maxlength="100" placeholder="ör. Tablet"></div>
+            <div class="field grow"><label for="cd">Açıklama</label><input id="cd" maxlength="255" placeholder="ör. Tablet bilgisayarlar"></div>
+            <button class="primary" type="submit">+ Kategori ekle</button>
+          </form>
+          <div id="catMsg" class="form-msg" hidden></div>
+        </section>
+        <div class="grid cards">
         ${categories.map((c) => {
           const s = stats(c.id);
           return `<article class="card cat-card">
@@ -376,12 +385,65 @@
               <div><strong class="num">${num.format(s.stock)}</strong><small>stok</small></div>
               <div><strong class="num">${fmtMoney(s.sales)}</strong><small>satış</small></div>
             </div>
-            <a href="#/urunler" data-cat="${c.id}">Ürünleri gör →</a>
+            <div class="cat-actions">
+              <a href="#/urunler" data-cat="${c.id}">Ürünleri gör →</a>
+              <span>
+                <button class="ghost" type="button" data-edit="${c.id}">Düzenle</button>
+                <button class="ghost danger" type="button" data-del="${c.id}">Sil</button>
+              </span>
+            </div>
           </article>`;
         }).join("")}
       </div>`;
       view.querySelectorAll("a[data-cat]").forEach((a) => a.addEventListener("click", () => {
         Object.assign(productState, { q: "", min: "", max: "", page: 0, categoryId: a.dataset.cat });
+      }));
+
+      const msg = (text, ok) => {
+        const el = $("#catMsg");
+        el.hidden = false;
+        el.className = `form-msg ${ok ? "ok" : "err"}`;
+        el.textContent = text;
+      };
+      const refresh = (text) => routes.kategoriler.render().then(() => msg(text, true));
+
+      $("#catForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        try {
+          const created = await api.request("POST", "/api/categories", { name: $("#cn").value, description: $("#cd").value || null });
+          await refresh(`"${created.name}" eklendi (id: ${created.id}) · 201 Created`);
+        } catch (err) { msg(err.message, false); }
+      });
+
+      view.querySelectorAll("button[data-del]").forEach((b) => b.addEventListener("click", async () => {
+        const c = categories.find((x) => String(x.id) === b.dataset.del);
+        if (!confirm(`"${c.name}" kategorisi silinsin mi?`)) return;
+        try {
+          await api.request("DELETE", `/api/categories/${c.id}`);
+          await refresh(`"${c.name}" silindi · 204 No Content`);
+        } catch (err) { msg(err.message, false); }
+      }));
+
+      view.querySelectorAll("button[data-edit]").forEach((b) => b.addEventListener("click", () => {
+        const c = categories.find((x) => String(x.id) === b.dataset.edit);
+        openDrawer(`Kategori #${c.id}`, `
+          <form id="editForm" style="display:flex;flex-direction:column;gap:14px">
+            <div class="field"><label for="en">Ad</label><input id="en" required maxlength="100" value="${esc(c.name)}"></div>
+            <div class="field"><label for="ed">Açıklama</label><input id="ed" maxlength="255" value="${esc(c.description || "")}"></div>
+            <div id="editMsg" class="form-msg err" hidden></div>
+            <button class="primary" type="submit">Kaydet (PUT)</button>
+          </form>`);
+        $("#editForm").addEventListener("submit", async (e) => {
+          e.preventDefault();
+          try {
+            const updated = await api.request("PUT", `/api/categories/${c.id}`, { name: $("#en").value, description: $("#ed").value || null });
+            closeDrawer();
+            await refresh(`"${updated.name}" güncellendi · 200 OK`);
+          } catch (err) {
+            $("#editMsg").hidden = false;
+            $("#editMsg").textContent = err.message;
+          }
+        });
       }));
     },
   };
