@@ -503,7 +503,35 @@
       <div class="sum-row"><span>Ara toplam</span><span class="num">${fmt(subtotal)}</span></div>
       <div class="sum-row"><span>Kargo</span><span>Ücretsiz</span></div>
       <div class="sum-row total"><span>Toplam</span><span class="num">${fmt(subtotal)}</span></div>
-      <button class="btn primary block" id="checkout">Siparişi tamamla</button>`;
+      <button class="btn primary block" id="checkout">Siparişi tamamla</button>
+      <small class="muted" style="text-align:center">Demo: sipariş, örnek müşteri (#${DEMO_CUSTOMER_ID}) adına oluşturulur.</small>`;
+  }
+
+  // Giriş sistemi olmadığı için siparişler demo verisindeki ilk müşteri adına verilir
+  const DEMO_CUSTOMER_ID = 1;
+
+  async function checkout(button) {
+    const lines = cart.filter((l) => productById(l.id));
+    if (!lines.length) return;
+    button.disabled = true;
+    button.textContent = "Sipariş oluşturuluyor…";
+    try {
+      const order = await request("POST", "/api/orders", {
+        customerId: DEMO_CUSTOMER_ID,
+        items: lines.map((l) => ({ productId: l.id, quantity: l.qty })),
+      });
+      cart = [];
+      saveCart();
+      updateCartCount();
+      state.ready = null; // stoklar değişti, ürünleri yeniden yükle
+      closeCart();
+      toast(`✅ Sipariş #${order.id} oluşturuldu · ${fmt(order.totalPrice)}`, 4000);
+      router();
+    } catch (e) {
+      button.disabled = false;
+      button.textContent = "Siparişi tamamla";
+      toast(esc(e.message.replace(/^\d+ · /, "")), 5000);
+    }
   }
 
   const drawer = $("#cartDrawer");
@@ -529,7 +557,7 @@
     } else if (t.dataset.remove) {
       cart = cart.filter((l) => l.id !== id);
     } else if (t.id === "checkout") {
-      toast("Sipariş oluşturma uç noktası (POST /api/orders) henüz yok. Eklendiğinde bu buton siparişi kaydedecek.", 5000);
+      checkout(t);
       return;
     } else return;
     saveCart();
