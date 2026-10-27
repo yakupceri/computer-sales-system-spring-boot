@@ -4,6 +4,7 @@ Bilgisayar ve donanım satışı için geliştirilmiş bir **Spring Boot REST AP
 
 Projenin öne çıkan özelliği **dinamik filtreleme**: Tek bir uç noktaya gönderilen JSON, JPA Specification ile SQL sorgusuna çevrilir. Bu sayede 10 farklı kaynak, ek kod yazmadan aranabilir, sıralanabilir ve sayfalanabilir.
 
+[![CI](https://github.com/yakupceri/computer-sales-system-spring-boot/actions/workflows/ci.yml/badge.svg)](https://github.com/yakupceri/computer-sales-system-spring-boot/actions/workflows/ci.yml)
 ![Java](https://img.shields.io/badge/Java-25-ED8B00?logo=openjdk&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.6-6DB33F?logo=springboot&logoColor=white)
 ![Spring Data JPA](https://img.shields.io/badge/Spring%20Data%20JPA-Hibernate%206-59666C?logo=hibernate&logoColor=white)
