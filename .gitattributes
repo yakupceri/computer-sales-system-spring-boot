@@ -1,2 +1,6 @@
 /mvnw text eol=lf
 *.cmd text eol=crlf
+
+# GitHub dil istatistiği: ön yüz ve ders notları sayılmasın, proje Java olarak görünsün
+src/main/resources/static/** linguist-detectable=false
+ders-notlari/** linguist-documentation
