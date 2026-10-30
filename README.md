@@ -95,6 +95,7 @@ cd computer-sales-system-spring-boot
 |---|---|
 | http://localhost:8080 | Mağaza |
 | http://localhost:8080/panel.html | Yönetim paneli |
+| http://localhost:8080/swagger-ui.html | Swagger UI: tüm uç noktaları tarayıcıdan deneme |
 | http://localhost:8080/h2-console | Veritabanı konsolu (JDBC URL: `jdbc:h2:mem:computer_sales`, kullanıcı: `sa`, şifre boş) |
 
 > H2 verileri bellekte tutar. Uygulama kapanınca veriler silinir, bir sonraki açılışta örnek veri yeniden yüklenir.
@@ -114,7 +115,7 @@ export DB_URL=jdbc:mysql://localhost:3306/computer_sales   # varsayılan bu adre
 
 ## 🔌 API
 
-Tüm uçlar `/api` altında.
+Tüm uçlar `/api` altında. Uygulama çalışırken hepsini **Swagger UI**'dan (`/swagger-ui.html`) deneyebilirsin.
 
 | Metot | Uç nokta | Açıklama |
 |---|---|---|
@@ -292,7 +293,7 @@ erDiagram
 - [ ] Siparişe ödeme ve fatura kaydının eklenmesi
 - [ ] Response DTO'ları (şu an cevaplarda entity'ler dönüyor)
 - [ ] `@RestControllerAdvice` ile global hata yönetimi. Hatalı filtrelerin `400` dönmesi de bu adımda gelecek.
-- [ ] OpenAPI / Swagger dokümantasyonu
+- [x] OpenAPI / Swagger dokümantasyonu (`/swagger-ui.html`)
 - [ ] Spring Security ile kimlik doğrulama
 
 ---
